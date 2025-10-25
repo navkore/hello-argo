@@ -3,3 +3,4 @@ resources:
 namePrefix: dev-
 commonLabels:
   environment: dev
+namespace: dev-ns
