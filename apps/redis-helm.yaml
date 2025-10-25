@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: redis-helm
-  namespace: helm-argo
+  namespace: argocd
 spec:
   project: default
   source:
@@ -14,7 +14,7 @@ spec:
     namespace: redis
   syncPolicy:
     syncOptions:
-        - CreateNamespace=true 
+      - CreateNamespace=true 
     automated:
       prune: true
       selfHeal: true
