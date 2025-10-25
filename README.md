@@ -38,6 +38,7 @@ you can create an app that uses this repo with this structure:
 How to Deploy All
 
 # 1. Install ArgoCD
+kubectl create namespace argocd
 kubectl apply -f argocd-install/install.yaml
 
 # 2. Apply the bootstrap "App of Apps"
@@ -45,4 +46,8 @@ kubectl apply -f argocd-install/app-of-apps.yaml
 
 # 3. Port-forward to open the UI
 kubectl port-forward svc/argocd-server -n argocd 8080:443
+
+# 4. get admin password:
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d && echo
+
 Then open https://localhost:8080 → login → you’ll see all three apps syncing 🎯
