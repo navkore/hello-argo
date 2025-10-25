@@ -1,0 +1,5 @@
+apiVersion: v2
+name: redis
+description: Simple Redis Helm chart for Argo CD learning
+version: 0.1.0
+appVersion: "7.2"

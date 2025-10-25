@@ -1,0 +1,7 @@
+resources:
+  - deployment.yaml
+  - service.yaml
+configMapGenerator:
+  - name: hello-argo
+    literals:
+      - index.html=<html><body><h1>Hello from Kustomize!</h1></body></html>

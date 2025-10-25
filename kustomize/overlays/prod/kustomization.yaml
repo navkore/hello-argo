@@ -1,0 +1,8 @@
+resources:
+  - ../../base
+namePrefix: prod-
+commonLabels:
+  environment: prod
+replicas:
+  - name: hello-argo
+    count: 3

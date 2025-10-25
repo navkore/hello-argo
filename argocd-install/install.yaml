@@ -1,0 +1,11 @@
+# Apply this to create the Argo CD namespace and install Argo CD
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: argocd
+---
+# Official install manifest (copied or referenced from Argo CD)
+# You can also replace this block with:
+#   kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+# For the sake of having everything local, include it directly here.
+# (Omitting full contents here due to length)

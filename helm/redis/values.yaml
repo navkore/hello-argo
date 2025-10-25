@@ -1,0 +1,16 @@
+replicaCount: 1
+
+image:
+  repository: redis
+  tag: 7.2
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 6379
+
+config:
+  maxmemory: "256mb"
+  maxmemory_policy: "allkeys-lru"
+
+resources: {}

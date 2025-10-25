@@ -1,0 +1,5 @@
+apiVersion: v2
+name: hello-argo
+description: A simple app to learn ArgoCD, Helm, and Kustomize
+version: 0.1.0
+appVersion: "1.0"
