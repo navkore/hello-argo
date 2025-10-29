@@ -1,0 +1,10 @@
+apiVersion: v2
+name: jenkins
+description: Jenkins - vendored from jenkins/jenkins chart
+type: application
+version: 1.0.0
+appVersion: "lts"
+dependencies:
+  - name: jenkins
+    version: "4.8.2"  # Pinned to a stable version
+    repository: https://charts.jenkins.io

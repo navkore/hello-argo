@@ -1,0 +1,29 @@
+# Default values for jenkins instances
+controller:
+  installPlugins:
+    - kubernetes:4.0.0
+    - workflow-aggregator:590.v6a_d052e5a_a_b_5
+    - git:5.0.0
+    - configuration-as-code:1625.v27444588cc3d
+    - job-dsl:1.81
+  resources:
+    requests:
+      cpu: "500m"
+      memory: "512Mi"
+    limits:
+      cpu: "2000m"
+      memory: "2Gi"
+  persistence:
+    enabled: true
+    size: "10Gi"
+  backup:
+    enabled: true
+  serviceType: ClusterIP
+  # Common security settings
+  adminPassword: "admin"  # Should be replaced with a secret in production
+  securityRealm: |-
+    local:
+      allowsSignup: false
+      users:
+        - id: admin
+          password: ${adminPassword}

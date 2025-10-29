@@ -1,0 +1,63 @@
+controller:
+  JCasC:
+    configScripts:
+      jenkins-beta.yaml: |
+        jenkins:
+          systemMessage: "Jenkins for beta environment"
+          globalNodeProperties:
+            - envVars:
+                env:
+                  - key: ENV_NAME
+                    value: "beta"
+  additionalPlugins:
+    - pipeline-utility-steps:2.15.3
+    - docker-workflow:1.29
+  initScripts:
+    beta-init.groovy: |
+      import jenkins.model.*
+      import hudson.model.*
+      import jenkins.model.Jenkins
+      import hudson.security.*
+      
+      println "Creating beta-specific seed job"
+      
+      def seedJobName = "beta-seed-job"
+      def seedJobConfig = '''
+      job("${seedJobName}") {
+          description("Seed job for beta environment")
+          steps {
+              dsl {
+                  text("""
+                      folder("beta-projects") {
+                          description("Beta environment projects")
+                      }
+                      
+                      pipelineJob("beta-projects/deploy-pipeline") {
+                          definition {
+                              cps {
+                                  script("""
+                                      pipeline {
+                                          agent any
+                                          stages {
+                                              stage('Deploy') {
+                                                  steps {
+                                                      echo 'Deploying to beta'
+                                                  }
+                                              }
+                                          }
+                                      }
+                                  """)
+                              }
+                          }
+                      }
+                  """)
+              }
+          }
+      }
+      '''
+      
+      def jenkins = Jenkins.instance
+      def jobDslScript = new javaposse.jobdsl.plugin.ExecuteDslScripts()
+      jobDslScript.targets = seedJobConfig
+      jobDslScript.sandbox = false
+      jobDslScript.execute()

@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: jenkins-environments
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - name: alfa
+            values: values-alfa.yaml
+          - name: beta
+            values: values-beta.yaml
+  template:
+    metadata:
+      name: jenkins-{{name}}
+      namespace: argocd
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/navkore/hello-argo.git
+        targetRevision: main
+        path: helm/jenkins
+        helm:
+          valueFiles:
+            - values.yaml  # Common values
+            - '{{values}}'  # Environment-specific values
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{name}}'
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true
+        automated:
+          prune: true
+          selfHeal: true

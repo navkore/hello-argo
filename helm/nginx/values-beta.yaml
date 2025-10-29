@@ -1,0 +1,28 @@
+# Beta-specific nginx configuration
+replicaCount: 3
+
+configurationSnippet: |
+  location / {
+    default_type text/html;
+    return 200 'Welcome to Beta nginx instance';
+  }
+
+resources:
+  requests:
+    cpu: 300m
+    memory: 384Mi
+  limits:
+    cpu: 600m
+    memory: 768Mi
+
+# Add custom headers for beta environment
+nginxConfig:
+  http-snippets: |
+    map $http_x_forwarded_proto $proxy_x_forwarded_proto {
+      default $http_x_forwarded_proto;
+      '' $scheme;
+    }
+  server-snippets: |
+    add_header X-Environment "beta";
+    add_header X-Pod-Name $hostname;
+    add_header X-Cache-Status $upstream_cache_status;

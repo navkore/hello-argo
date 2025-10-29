@@ -1,0 +1,21 @@
+resources:
+- ../../base
+
+namePrefix: prod-
+nameSuffix: -prod
+
+commonLabels:
+  environment: production
+  cluster: prod
+
+patches:
+- target:
+    kind: Application
+    name: .*
+  patch: |-
+    - op: replace
+      path: /spec/destination/server
+      value: https://prod-cluster-api:6443
+    - op: replace
+      path: /spec/source/targetRevision
+      value: main

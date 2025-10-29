@@ -3,3 +3,7 @@ name: hello-argo
 description: A simple app to learn ArgoCD, Helm, and Kustomize
 version: 0.1.0
 appVersion: "1.0"
+dependencies:
+  - name: nginx
+    version: "9.3.5"  # Pinned to a stable version
+    repository: https://charts.bitnami.com/bitnami

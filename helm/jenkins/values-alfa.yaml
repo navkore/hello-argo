@@ -1,0 +1,63 @@
+controller:
+  JCasC:
+    configScripts:
+      jenkins-alfa.yaml: |
+        jenkins:
+          systemMessage: "Jenkins for alfa environment"
+          globalNodeProperties:
+            - envVars:
+                env:
+                  - key: ENV_NAME
+                    value: "alfa"
+  additionalPlugins:
+    - pipeline-utility-steps:2.15.3
+    - http_request:1.18
+  initScripts:
+    alfa-init.groovy: |
+      import jenkins.model.*
+      import hudson.model.*
+      import jenkins.model.Jenkins
+      import hudson.security.*
+      
+      println "Creating alfa-specific seed job"
+      
+      def seedJobName = "alfa-seed-job"
+      def seedJobConfig = '''
+      job("${seedJobName}") {
+          description("Seed job for alfa environment")
+          steps {
+              dsl {
+                  text("""
+                      folder("alfa-projects") {
+                          description("Alfa environment projects")
+                      }
+                      
+                      pipelineJob("alfa-projects/build-pipeline") {
+                          definition {
+                              cps {
+                                  script("""
+                                      pipeline {
+                                          agent any
+                                          stages {
+                                              stage('Build') {
+                                                  steps {
+                                                      echo 'Building alfa project'
+                                                  }
+                                              }
+                                          }
+                                      }
+                                  """)
+                              }
+                          }
+                      }
+                  """)
+              }
+          }
+      }
+      '''
+      
+      def jenkins = Jenkins.instance
+      def jobDslScript = new javaposse.jobdsl.plugin.ExecuteDslScripts()
+      jobDslScript.targets = seedJobConfig
+      jobDslScript.sandbox = false
+      jobDslScript.execute()

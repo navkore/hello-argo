@@ -1,20 +1,18 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: hello-argo-helm
+  name: prod-cluster-config
   namespace: argocd
 spec:
   project: default
   source:
     repoURL: https://github.com/navkore/hello-argo.git
     targetRevision: main
-    path: helm
+    path: clusters/prod
   destination:
     server: https://kubernetes.default.svc
-    namespace: helm
+    namespace: argocd
   syncPolicy:
-    syncOptions:
-      - CreateNamespace=true
     automated:
       prune: true
       selfHeal: true

@@ -1,0 +1,21 @@
+resources:
+- ../../base
+
+namePrefix: dev-
+nameSuffix: -dev
+
+commonLabels:
+  environment: development
+  cluster: dev
+
+patches:
+- target:
+    kind: Application
+    name: .*
+  patch: |-
+    - op: replace
+      path: /spec/destination/server
+      value: https://dev-cluster-api:6443
+    - op: replace
+      path: /spec/source/targetRevision
+      value: develop

@@ -1,0 +1,6 @@
+resources:
+- jenkins-apps.yaml
+- nginx-apps.yaml
+
+commonLabels:
+  app.kubernetes.io/managed-by: argocd

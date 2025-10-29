@@ -1,0 +1,27 @@
+# Alfa-specific nginx configuration
+replicaCount: 2
+
+configurationSnippet: |
+  location / {
+    default_type text/html;
+    return 200 'Welcome to Alfa nginx instance';
+  }
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 256Mi
+  limits:
+    cpu: 400m
+    memory: 512Mi
+
+# Add custom headers for alfa environment
+nginxConfig:
+  http-snippets: |
+    map $http_x_forwarded_proto $proxy_x_forwarded_proto {
+      default $http_x_forwarded_proto;
+      '' $scheme;
+    }
+  server-snippets: |
+    add_header X-Environment "alfa";
+    add_header X-Pod-Name $hostname;

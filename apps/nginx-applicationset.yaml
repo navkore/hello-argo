@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: nginx-environments
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - name: alfa
+            values: values-alfa.yaml
+            replicas: "2"
+          - name: beta
+            values: values-beta.yaml
+            replicas: "3"
+  template:
+    metadata:
+      name: nginx-{{name}}
+      namespace: argocd
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/navkore/hello-argo.git
+        targetRevision: main
+        path: helm/nginx
+        helm:
+          valueFiles:
+            - values.yaml  # Common values
+            - '{{values}}'  # Environment-specific values
+          values: |
+            replicaCount: {{replicas}}
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{name}}'
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true
+        automated:
+          prune: true
+          selfHeal: true
